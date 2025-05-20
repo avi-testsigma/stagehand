@@ -884,6 +884,7 @@ export class Stagehand {
       Do not ask follow up questions, the user will trust your judgement.`,
         agentType: options.provider,
       },
+      options.client,
     );
 
     this.log({

@@ -1,6 +1,6 @@
 {
-  "name": "@browserbasehq/stagehand",
-  "version": "2.2.1",
+  "name": "@testsigmainc/stagehand",
+  "version": "0.0.4",
   "description": "An AI web browsing framework focused on simplicity and extensibility.",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -15,13 +15,12 @@
     "docs": "pnpm --filter @browserbasehq/stagehand-docs run dev",
     "evals": "pnpm run build && tsx evals/index.eval.ts",
     "e2e": "pnpm run build && cd evals/deterministic && playwright test --config=e2e.playwright.config.ts",
-    "e2e:bb": "pnpm run build && cd evals/deterministic && playwright test --config=bb.playwright.config.ts",	
+    "e2e:bb": "pnpm run build && cd evals/deterministic && playwright test --config=bb.playwright.config.ts",
     "e2e:local": "pnpm run build && cd evals/deterministic && playwright test --config=local.playwright.config.ts",
     "build-dom-scripts": "tsx lib/dom/genDomScripts.ts",
     "build-types": "tsc --emitDeclarationOnly --outDir dist",
     "build-js": "tsup lib/index.ts --dts",
     "build": "pnpm run lint && pnpm run build-dom-scripts && pnpm run build-js && pnpm run build-types",
-    "prepare": "pnpm run build",
     "lint": "pnpm run prettier:fix && pnpm run eslint",
     "release": "pnpm run build && changeset publish",
     "release-canary": "pnpm run build && changeset version --snapshot && changeset publish --tag alpha"
@@ -97,6 +96,9 @@
     "doc": "docs",
     "example": "examples",
     "lib": "lib"
+  },
+  "publishConfig": {
+    "@testsigmainc:registry": "https://npm.pkg.github.com"
   },
   "repository": {
     "type": "git",

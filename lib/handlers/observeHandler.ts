@@ -148,8 +148,8 @@ export class StagehandObserveHandler {
         if (!xpath || xpath === "") {
           this.logger({
             category: "observation",
-            message: `Empty xpath returned for element: ${elementId}`,
-            level: 1,
+            message: `Empty xpath returned for element: ${elementId}, tree: ${JSON.stringify(xpathMap, null, 2)}`,
+            level: 0,
           });
         }
 
@@ -165,7 +165,7 @@ export class StagehandObserveHandler {
     this.logger({
       category: "observation",
       message: "found elements",
-      level: 1,
+      level: 0,
       auxiliary: {
         elements: {
           value: JSON.stringify(elementsWithSelectors),

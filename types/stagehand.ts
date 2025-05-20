@@ -6,6 +6,8 @@ import { AvailableModel, ClientOptions } from "./model";
 import { LLMClient } from "../lib/llm/LLMClient";
 import { Cookie } from "@playwright/test";
 import { AgentProviderType } from "./agent";
+import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 
 export interface ConstructorParams {
   /**
@@ -265,6 +267,10 @@ export interface AgentConfig {
    * Additional options to pass to the agent client
    */
   options?: Record<string, unknown>;
+  /**
+   * The client to use for agent functionality
+   */
+  client?: OpenAI | Anthropic;
 }
 
 export enum StagehandFunctionName {

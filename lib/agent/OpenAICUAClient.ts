@@ -12,6 +12,7 @@ import {
 } from "@/types/agent";
 import { AgentClient } from "./AgentClient";
 import { AgentScreenshotProviderError } from "@/types/stagehandErrors";
+import Anthropic from "@anthropic-ai/sdk";
 
 /**
  * Client for OpenAI's Computer Use Assistant API
@@ -35,6 +36,7 @@ export class OpenAICUAClient extends AgentClient {
     modelName: string,
     userProvidedInstructions?: string,
     clientOptions?: Record<string, unknown>,
+    client?: OpenAI | Anthropic,
   ) {
     super(type, modelName, userProvidedInstructions);
 
@@ -50,15 +52,17 @@ export class OpenAICUAClient extends AgentClient {
       typeof clientOptions.environment === "string"
     ) {
       this.environment = clientOptions.environment;
+      delete clientOptions.environment;
     }
 
     // Store client options for reference
     this.clientOptions = {
       apiKey: this.apiKey,
+      ...clientOptions,
     };
 
     // Initialize the OpenAI client
-    this.client = new OpenAI(this.clientOptions);
+    this.client = (client as OpenAI) || new OpenAI(this.clientOptions);
   }
 
   setViewport(width: number, height: number): void {
