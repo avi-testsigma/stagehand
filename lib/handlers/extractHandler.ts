@@ -149,10 +149,17 @@ export class StagehandExtractHandler {
     const [transformedSchema, urlFieldPaths] =
       transformUrlStringsToNumericIds(schema);
 
+    const pageInformation = {
+      url: this.stagehand.page.url(),
+      title: this.stagehand.page.title(),
+    };
+
+    const domElements = `Page Information: ${JSON.stringify(pageInformation)}\n\n DOM Elements: ${outputString}`;
+
     // call extract inference with transformed schema
     const extractionResponse = await extract({
       instruction,
-      domElements: outputString,
+      domElements,
       schema: transformedSchema,
       chunksSeen: 1,
       chunksTotal: 1,
