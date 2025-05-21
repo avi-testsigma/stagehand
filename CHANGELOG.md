@@ -1,5 +1,11 @@
 # @browserbasehq/stagehand
 
+## 0.0.5
+
+### Patch Changes
+
+- added page info to extract payload
+
 ## 2.2.1
 
 ### Patch Changes

@@ -13,6 +13,8 @@ import {
 } from "@/types/agent";
 import { Stagehand } from "../index";
 import { StagehandFunctionName } from "@/types/stagehand";
+import Anthropic from "@anthropic-ai/sdk";
+import OpenAI from "openai";
 
 export class StagehandAgentHandler {
   private stagehand: Stagehand;
@@ -28,6 +30,7 @@ export class StagehandAgentHandler {
     stagehandPage: StagehandPage,
     logger: (message: LogLine) => void,
     options: AgentHandlerOptions,
+    client?: OpenAI | Anthropic,
   ) {
     this.stagehand = stagehand;
     this.stagehandPage = stagehandPage;
@@ -38,20 +41,21 @@ export class StagehandAgentHandler {
     this.provider = new AgentProvider(logger);
 
     // Create client first
-    const client = this.provider.getClient(
+    const agentClient = this.provider.getClient(
       options.modelName,
       options.clientOptions || {},
       options.userProvidedInstructions,
+      client,
     );
 
     // Store the client
-    this.agentClient = client;
+    this.agentClient = agentClient;
 
     // Set up common functionality for any client type
     this.setupAgentClient();
 
     // Create agent with the client
-    this.agent = new StagehandAgent(client, logger);
+    this.agent = new StagehandAgent(agentClient, logger);
   }
 
   private setupAgentClient(): void {
@@ -528,7 +532,7 @@ export class StagehandAgentHandler {
           // Create cursor element
           const cursor = document.createElement('div');
           cursor.id = cursorId;
-          
+
           // Use the provided SVG for a custom cursor
           cursor.innerHTML = \`
           <svg xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 28 28" width="28" height="28">
@@ -536,7 +540,7 @@ export class StagehandAgentHandler {
             <rect x="12.5" y="13.6" transform="matrix(0.9221 -0.3871 0.3871 0.9221 -5.7605 6.5909)" width="2" height="8" fill="#000000"/>
           </svg>
           \`;
-          
+
           // Style the cursor
           cursor.style.position = 'absolute';
           cursor.style.top = '0';
@@ -546,7 +550,7 @@ export class StagehandAgentHandler {
           cursor.style.pointerEvents = 'none';
           cursor.style.zIndex = '9999999';
           cursor.style.transform = 'translate(-4px, -4px)'; // Adjust to align the pointer tip
-          
+
           // Create highlight element for click animation
           const highlight = document.createElement('div');
           highlight.id = highlightId;
@@ -560,18 +564,18 @@ export class StagehandAgentHandler {
           highlight.style.zIndex = '9999998';
           highlight.style.transition = 'transform 0.3s ease-out, opacity 0.3s ease-out';
           highlight.style.opacity = '0';
-          
+
           // Add elements to the document
           document.body.appendChild(cursor);
           document.body.appendChild(highlight);
-          
+
           // Add a function to update cursor position
           window.__updateCursorPosition = function(x, y) {
             if (cursor) {
               cursor.style.transform = \`translate(\${x - 4}px, \${y - 4}px)\`;
             }
           };
-          
+
           // Add a function to animate click
           window.__animateClick = function(x, y) {
             if (highlight) {
@@ -579,7 +583,7 @@ export class StagehandAgentHandler {
               highlight.style.top = \`\${y}px\`;
               highlight.style.transform = 'translate(-50%, -50%) scale(1)';
               highlight.style.opacity = '1';
-              
+
               setTimeout(() => {
                 highlight.style.transform = 'translate(-50%, -50%) scale(0)';
                 highlight.style.opacity = '0';
